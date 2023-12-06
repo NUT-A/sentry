@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, formatEther, WeiPerEther } from 'ethers';
 import { NodeLicenseAbi } from '../abis/index.js';
 import { config } from '../config.js';
 
@@ -16,24 +16,18 @@ export async function mintNodeLicenses(
     maxPrice?: number
 ): Promise<{ mintedNftIds: bigint[], txReceipt: ethers.TransactionReceipt, pricePaid: bigint }> {
 
+    const maxPriceInWei = maxPrice ? BigInt(maxPrice) * WeiPerEther : undefined;
+
     // Create an instance of the NodeLicense contract
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
 
     // Get the price for minting the specified amount of tokens
-    const price = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const price: bigint = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const averagePrice = price / BigInt(amount);
 
-    // Convert the price from wei to eth using ethers utils
-    const priceInEth = ethers.utils.formatEther(price);
-    const priceInEthNumber = Number(priceInEth);
+    console.log(`The price for minting ${amount} tokens is ${formatEther(price)} ETH (${formatEther(averagePrice)} ETH per token)`);
 
-    console.log(`Price for minting ${amount} tokens: ${priceInEth} ETH`);
-
-    // Check if the price is less than the maximum price
-    const averagePrice = priceInEthNumber / amount;
-
-    console.log(`Average price per token: ${averagePrice} ETH`);
-
-    if (maxPrice && averagePrice > maxPrice) {
+    if (maxPriceInWei && averagePrice > maxPriceInWei) {
         throw new Error(`The price is too high`);
     }
 
