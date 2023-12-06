@@ -15,8 +15,8 @@ export async function mintNodeLicenses(
     promoCode?: string,
     maxPrice?: number
 ): Promise<{ mintedNftIds: bigint[], txReceipt: ethers.TransactionReceipt, pricePaid: bigint }> {
-
     const maxPriceInWei = maxPrice ? parseUnits(maxPrice.toString(), 'ether') : undefined;
+    console.log(`Max price wei: ${maxPriceInWei}`)
 
     // Create an instance of the NodeLicense contract
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
