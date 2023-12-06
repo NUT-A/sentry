@@ -1,4 +1,4 @@
-import { ethers, formatEther, WeiPerEther } from 'ethers';
+import { ethers, formatEther, parseUnits } from 'ethers';
 import { NodeLicenseAbi } from '../abis/index.js';
 import { config } from '../config.js';
 
@@ -16,7 +16,7 @@ export async function mintNodeLicenses(
     maxPrice?: number
 ): Promise<{ mintedNftIds: bigint[], txReceipt: ethers.TransactionReceipt, pricePaid: bigint }> {
 
-    const maxPriceInWei = maxPrice ? BigInt(maxPrice) * WeiPerEther : undefined;
+    const maxPriceInWei = maxPrice ? parseUnits(maxPrice.toString(), 'ether') : undefined;
 
     // Create an instance of the NodeLicense contract
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
