@@ -20,10 +20,19 @@ export async function mintNodeLicenses(
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
 
     // Get the price for minting the specified amount of tokens
-    const price = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const price: BigInt = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+
+    // Convert the price from wei to eth using ethers utils
+    const priceInEth = ethers.utils.formatEther(price);
+    const priceInEthNumber = Number(priceInEth);
+
+    console.log(`Price for minting ${amount} tokens: ${priceInEth} ETH`);
 
     // Check if the price is less than the maximum price
-    const averagePrice = price / amount;
+    const averagePrice = priceInEthNumber / amount;
+
+    console.log(`Average price per token: ${averagePrice} ETH`);
+
     if (maxPrice && averagePrice > maxPrice) {
         throw new Error(`The price is too high`);
     }

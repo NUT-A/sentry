@@ -1,14 +1,17 @@
+const defaultRpcUrl = process.env.RPC_URL || "https://frequent-damp-star.arbitrum-goerli.quiknode.pro/c1b565106ebecad49a9e7a938d084543187755e4/";
+const nodeLicenseAddress = process.env.NODE_LICENSE_ADDRESS || "0xfA802933C69FCC6166C1436FE5F8300aD347A4b0";
+
 export let config = {
   "arbitrumBlockExplorer": "https://arbiscan.io",
   "arbitrumGoerliBlockExplorer": "https://goerli.arbiscan.io",
-  "defaultRpcUrl": "https://frequent-damp-star.arbitrum-goerli.quiknode.pro/c1b565106ebecad49a9e7a938d084543187755e4/",
+  "defaultRpcUrl": defaultRpcUrl,
   "esXaiAddress": "0x2f00602A48A42f66700AF7cDA166d1aBcbb60f54",
   "esXaiDeployedBlockNumber": 57988105,
   "esXaiImplementationAddress": "0x5c7d1f6fcc3f3fd688ffe86740904679a9272c2b",
   "gasSubsidyAddress": "0xdE098571583FF40BADf6a1877Bbe5b4890aF2dF3",
   "gasSubsidyDeployedBlockNumber": 57988112,
   "gasSubsidyImplementationAddress": "0x85d0d1db6815aef063246915b55763b5f0ab7c92",
-  "nodeLicenseAddress": "0xfA802933C69FCC6166C1436FE5F8300aD347A4b0",
+  "nodeLicenseAddress": nodeLicenseAddress,
   "nodeLicenseDeployedBlockNumber": 57988175,
   "nodeLicenseImplementationAddress": "0x35bc89750a0f0bbb1a1395975a9cbbe4d53ffaac",
   "refereeAddress": "0x75fA4516F154C060A6849D308b9A2340282A046A",
