@@ -20,7 +20,7 @@ export async function mintNodeLicenses(
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
 
     // Get the price for minting the specified amount of tokens
-    const price: BigInt = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const price = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
 
     // Convert the price from wei to eth using ethers utils
     const priceInEth = ethers.utils.formatEther(price);
