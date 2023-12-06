@@ -53,6 +53,7 @@ jobs:
       - name: zip cli artifacts
         run: |
           cd apps/cli/release
+          zip sentry-node-cli-macos.zip sentry-node-cli-macos
           zip sentry-node-cli-linux.zip sentry-node-cli-linux
         if: matrix.os == 'ubuntu-latest'
 
@@ -74,6 +75,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
+            release-sentry-client-desktop-macos-latest/latest-mac.yml
+            release-sentry-client-desktop-macos-latest/sentry-client-macos.dmg.blockmap
+            release-sentry-client-desktop-macos-latest/sentry-client-macos.dmg
             release-sentry-client-desktop-ubuntu-latest/latest-linux.yml
             release-sentry-client-desktop-ubuntu-latest/sentry-client-linux.AppImage
             release-cli-ubuntu-latest/sentry-node-cli-linux.zip
