@@ -13,6 +13,7 @@ export async function mintNodeLicenses(
     amount: number,
     signer: ethers.Signer,
     promoCode?: string,
+    maxPrice?: number
 ): Promise<{ mintedNftIds: bigint[], txReceipt: ethers.TransactionReceipt, pricePaid: bigint }> {
 
     // Create an instance of the NodeLicense contract
@@ -20,6 +21,12 @@ export async function mintNodeLicenses(
 
     // Get the price for minting the specified amount of tokens
     const price = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+
+    // Check if the price is less than the maximum price
+    const averagePrice = price / amount;
+    if (maxPrice && averagePrice > maxPrice) {
+        throw new Error(`The price is too high`);
+    }
 
     // Get the signer's provider
     const provider = signer.provider;
