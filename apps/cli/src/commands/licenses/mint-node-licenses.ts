@@ -13,6 +13,13 @@ export function mintNodeLicenses(cli: Vorpal) {
             };
             const { amount } = await this.prompt(amountPrompt);
 
+            const maxPricePrompt: Vorpal.PromptObject = {
+                type: 'input',
+                name: 'price',
+                message: 'Enter the max price:',
+            };
+            const { price } = await this.prompt(maxPricePrompt);
+
             const privateKeyPrompt: Vorpal.PromptObject = {
                 type: 'password',
                 name: 'privateKey',
@@ -39,6 +46,7 @@ export function mintNodeLicenses(cli: Vorpal) {
                     Number(amount),
                     signer,
                     promoCode,
+                    Number(price)
                 );
 
                 this.log(`Tokens successfully minted. Here are the details:`);
