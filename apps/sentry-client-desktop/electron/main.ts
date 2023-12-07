@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, safeStorage, shell} from 'electron';
+import {app, BrowserWindow, dialog, ipcMain, safeStorage, shell} from 'electron';
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
@@ -117,20 +117,18 @@ function createWindow() {
 		win.loadFile(path.join(process.env.DIST, 'index.html'))
 	}
 
-	// win.webContents.openDevTools();
+	win.on('close', (e) => {
+		const choice = dialog.showMessageBoxSync({
+			type: 'question',
+			buttons: ['Yes', 'No'],
+			title: 'Confirm',
+			message: 'Are you sure you want to quit? You will stop accruing rewards once you exit the client.'
+		});
 
-	// win.on('close', (e) => {
-	// 	const choice = dialog.showMessageBoxSync({
-	// 		type: 'question',
-	// 		buttons: ['Yes', 'No'],
-	// 		title: 'Confirm',
-	// 		message: 'Are you sure you want to quit? You will stop accruing rewards once you exit the client.'
-	// 	});
-	//
-	// 	if (choice === 1) {
-	// 		e.preventDefault();
-	// 	}
-	// });
+		if (choice === 1) {
+			e.preventDefault();
+		}
+	});
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -205,7 +203,7 @@ autoUpdater.on('update-available', () => {
 // 	win?.webContents.send("update-message", "update-not-available");
 // });
 autoUpdater.on('error', (err) => {
-	win?.webContents.send("update-message", err.message);
+	win?.webContents.send("update-error", err.message);
 });
 // autoUpdater.on('download-progress', (progressObj) => {
 // 	let logMessage = "Download speed: " + progressObj.bytesPerSecond;
