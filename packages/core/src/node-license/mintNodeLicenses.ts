@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, formatEther, parseUnits } from 'ethers';
 import { NodeLicenseAbi } from '../abis/index.js';
 import { config } from '../config.js';
 
@@ -13,13 +13,23 @@ export async function mintNodeLicenses(
     amount: number,
     signer: ethers.Signer,
     promoCode?: string,
+    maxPrice?: number
 ): Promise<{ mintedNftIds: bigint[], txReceipt: ethers.TransactionReceipt, pricePaid: bigint }> {
+    const maxPriceInWei = maxPrice ? parseUnits(maxPrice.toString(), 'ether') : undefined;
+    console.log(`Max price wei: ${maxPriceInWei}`)
 
     // Create an instance of the NodeLicense contract
     const nodeLicenseContract = new ethers.Contract(config.nodeLicenseAddress, NodeLicenseAbi, signer);
 
     // Get the price for minting the specified amount of tokens
-    const price = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const price: bigint = await nodeLicenseContract.price(amount, promoCode ? promoCode : "");
+    const averagePrice = price / BigInt(amount);
+
+    console.log(`The price for minting ${amount} tokens is ${formatEther(price)} ETH (${formatEther(averagePrice)} ETH per token)`);
+
+    if (maxPriceInWei && averagePrice > maxPriceInWei) {
+        throw new Error(`The price is too high`);
+    }
 
     // Get the signer's provider
     const provider = signer.provider;
